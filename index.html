@@ -1,0 +1,63 @@
+<!doctype html>
+<style>canvas{margin:0; max-width: 100%;}</style>
+<html><canvas id="a" width="1000" height="1000"></canvas><script>
+const canv = document.getElementById('a');
+const cont = canv.getContext('2d');
+window.requestAnimationFrame(main);
+let yp = 100;
+const maxyp = 90;
+const minyp = 10;
+const genNextYp = () => Math.floor(Math.random() * (maxyp - minyp) + minyp) * 10;
+let nextyp = genNextYp();
+let tegami = [];
+let score = 0;
+const postx = 700;
+function main(delta) {
+  cont.fillStyle = "#ffffff";
+  cont.fillRect(0, 0, 1000, 1000);
+  cont.fillStyle = "#ff0000";
+  cont.fillRect(postx - 50, yp - 50, 100, 100);
+  cont.fillStyle = "#000000"
+  cont.font = '400 40px/2 Unknown Font, sans-serif';
+  cont.fillText('score: '+score.toString(), 0, 100);
+  if (nextyp === yp) {
+    while(nextyp === yp){nextyp = genNextYp();}
+  }
+  if ((nextyp - yp) < 0) {
+  yp -= 10;
+  } else {
+  yp += 10;
+  }
+  
+  tegami.map(v => {
+    cont.stroke = "#000000";
+    cont.strokeRect(v.x - 20, 500, 40, 40);
+  });
+  tegami.map((v) => {v.x += 10;})
+  tegami = tegami.filter(v => {if (v.x > 1200) {
+   score -= 1;
+   return false;
+  }
+  
+  return true;
+  });
+  window.requestAnimationFrame(main);
+  tegami = tegami.filter((v) => {
+    if ((v.x - postx) * (v.x - postx) + (500 - yp) * (500 - yp) < 4500) {
+    score += 1;
+    return false;
+    }
+    return true;
+  });
+}
+
+class Tegami{
+constructor(){
+this.x = 100;
+}
+}
+
+canv.addEventListener('click', () => {
+  tegami.push(new Tegami());
+}, false);
+</script></html>
